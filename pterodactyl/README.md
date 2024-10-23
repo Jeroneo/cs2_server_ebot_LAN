@@ -16,6 +16,7 @@ PTERODACTYL_LASTNAME=admin
 PTERODACTYL_PASSWORD=admin
 ```
 
+Pour ce faire:
 ```
 nano env.sample
 ```
@@ -30,10 +31,10 @@ Pour installer un egg, il faut se rendre dans l'interface d'administration de Pt
 
 On peut utiliser l'egg CS2 disponible [ici](./egg_cs2_GOTV.json).
 
-### Création des serveurs CS
+### Création des serveurs CS2
 
-Pour créer les serveurs CS, il faut se rendre dans l'interface d'administration de Ptérodactyl, puis dans l'onglet "Servers" et enfin dans l'onglet "Create". Il faut ensuite choisir l'egg CS2 et le serveur / port sur lequel on veut créer le serveur. Il faut ensuite remplir les champs demandés. 
+Pour créer les serveurs CS2, il faut se rendre dans l'interface d'administration de Pterodactyl, puis dans l'onglet "Servers" et enfin dans l'onglet "Create". Il faut ensuite choisir l'egg CS2 et le serveur / port sur lequel on veut créer le serveur. Il faut ensuite remplir les champs demandés. 
 
-Il faut bien penser à allouer un deuxième port pour la GOTV.
+Il faut bien penser à allouer un deuxième port pour la GOTV dans 'Additional Allocation(s)'.
 
-Attention, lors de la création d'un serveur, il faut renseigner le RCON (pour le contrôle du serveur par Ebot) et le port de la GOTV.
+Attention, lors de la création d'un serveur, il faut renseigner le RCON (pour le contrôle du serveur par eBot) et le port de la GOTV.
