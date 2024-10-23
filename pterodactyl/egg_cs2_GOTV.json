@@ -1,0 +1,128 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2024-10-23T03:08:08+02:00",
+    "name": "Counter-Strike 2",
+    "author": "infra@gflclan.com",
+    "description": "Counter-Strike is a multiplayer first-person shooter video game developed by Valve. This image is based on Valve's Steam Runtime 3 platform (codenamed SNIPER) and was created to run both CSGO and CS2 without issues.",
+    "features": [
+        "gsl_token",
+        "steam_disk_space"
+    ],
+    "docker_images": {
+        "SteamRT3": "ghcr.io\/1zc\/steamrt3-pterodactyl:latest",
+        "SteamRT3-PublicBeta": "ghcr.io\/1zc\/steamrt3-pterodactyl:beta-latest",
+        "SteamRT3-Dev": "ghcr.io\/1zc\/steamrt3-pterodactyl:dev",
+        "SteamRT3-PublicBetaDev": "ghcr.io\/1zc\/steamrt3-pterodactyl:beta-dev"
+    },
+    "file_denylist": [],
+    "startup": ".\/game\/cs2.sh -dedicated +ip 0.0.0.0 -port {{SERVER_PORT}} +map {{SRCDS_MAP}} -maxplayers {{SRCDS_MAXPLAYERS}} +sv_setsteamaccount {{STEAM_ACC}} +rcon_password {{RCON_PASSWORD}} +tv_port {{GOTV_PORT}} +tv_relaypassword {{GOTV_PASSWORD}}",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"Connection to Steam servers successful\"\r\n}",
+        "logs": "{}",
+        "stop": "quit"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# steamcmd Base Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\n## just in case someone removed the defaults.\r\nif [ \"${STEAM_USER}\" == \"\" ]; then\r\nSTEAM_USER=anonymous\r\nSTEAM_PASS=\"\"\r\nSTEAM_AUTH=\"\"\r\nfi\r\n## download and install steamcmd\r\ncd \/tmp\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncurl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\nmkdir -p \/mnt\/server\/steamapps # Fix steamcmd disk write error when this folder is missing\r\ncd \/mnt\/server\/steamcmd\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\n## install game using steamcmd\r\n.\/steamcmd.sh +force_install_dir \/mnt\/server +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} +app_update ${SRCDS_APPID} ${EXTRA_FLAGS} +quit ## other flags may be needed depending on install. looking at you cs 1.6\r\n# Add server configuration\r\necho \"sv_hibernate_postgame_delay 180\r\n\r\ntv_allow_camera_man 1        \t\/\/ Auto director allows spectators to become camera man\r\ntv_allow_static_shots 1        \t\/\/ Auto director uses fixed level cameras for shots\r\ntv_autorecord 1            \t\/\/ Automatically records all games as GOTV demos.\r\ntv_chatgroupsize 0        \t\/\/ Set the default chat group size\r\ntv_chattimelimit 8        \t\/\/ Limits spectators to chat only every n seconds\r\ntv_debug 0                \t\/\/ GOTV debug info.\r\ntv_delay 90                \t\/\/ GOTV broadcast delay in seconds\r\ntv_delaymapchange 1        \t\/\/ Delays map change until broadcast is complete\r\ntv_deltacache 2            \t\/\/ Enable delta entity bit stream cache\r\ntv_dispatchmode 1            \t\/\/ Dispatch clients to relay proxies: 0=never, 1=if appropriate, 2=always\r\ntv_enable 1                \t\/\/ Activates GOTV on server.\r\ntv_maxclients 10            \t\/\/ Maximum client number on GOTV server.\r\ntv_maxrate 128000            \t\/\/ Max GOTV spectator bandwidth rate allowed, 0 == unlimited\r\ntv_name \\\"UTT Arena 2024 - GOTV\\\"    \t\/\/ GOTV host name\r\ntv_overridemaster 0        \t\/\/ Overrides the GOTV master root address.\r\ntv_relayvoice 0            \t\/\/ Relay voice data: 0=off, 1=on\r\ntv_snapshotrate 24        \t\/\/ Snapshots broadcasted per second\r\ntv_timeout 60            \t\/\/ GOTV connection timeout in seconds.\r\ntv_title \\\"UTT Arena 2024  - GOTV\\\"    \t\/\/ Set title for GOTV spectator UI\r\ntv_transmitall 1            \t\/\/ Transmit all entities (not only director view)\" >> \/mnt\/server\/cfg\/gotv5on5.cfg\r\n## set up 32 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk32\r\ncp -v linux32\/steamclient.so ..\/.steam\/sdk32\/steamclient.so\r\n## set up 64 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk64\r\ncp -v linux64\/steamclient.so ..\/.steam\/sdk64\/steamclient.so",
+            "container": "ghcr.io\/pterodactyl\/installers:debian",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Map",
+            "description": "The default map for the server.",
+            "env_variable": "SRCDS_MAP",
+            "default_value": "de_dust2",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|alpha_dash",
+            "field_type": "text"
+        },
+        {
+            "name": "Source AppID",
+            "description": "NOT VISIBLE TO USERS. DO NOT EDIT.",
+            "env_variable": "SRCDS_APPID",
+            "default_value": "730",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|numeric",
+            "field_type": "text"
+        },
+        {
+            "name": "Max Players",
+            "description": "The maximum number of players the server can host.",
+            "env_variable": "SRCDS_MAXPLAYERS",
+            "default_value": "64",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|numeric",
+            "field_type": "text"
+        },
+        {
+            "name": "Disable Updates",
+            "description": "Set to 1 to stop updates.",
+            "env_variable": "SRCDS_STOP_UPDATE",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|numeric",
+            "field_type": "text"
+        },
+        {
+            "name": "Validate Install",
+            "description": "Toggles SteamCMD validation of game server files. Set to 0 to disable.",
+            "env_variable": "SRCDS_VALIDATE",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|numeric",
+            "field_type": "text"
+        },
+        {
+            "name": "Game Server Login Token (GSLT)",
+            "description": "The Steam Account Token required for the server to be displayed publicly. https:\/\/steamcommunity.com\/dev\/managegameservers",
+            "env_variable": "STEAM_ACC",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "max:32|nullable",
+            "field_type": "text"
+        },
+        {
+            "name": "RCON Password",
+            "description": "The password for RCON access.",
+            "env_variable": "RCON_PASSWORD",
+            "default_value": "secure_password_here",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "GOTV Port",
+            "description": "Port for GOTV access",
+            "env_variable": "GOTV_PORT",
+            "default_value": "27020",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|numeric",
+            "field_type": "text"
+        },
+        {
+            "name": "GOTV Password",
+            "description": "Password to access the GOTV",
+            "env_variable": "GOTV_PASSWORD",
+            "default_value": "schmetterling",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        }
+    ]
+}

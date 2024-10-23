@@ -1,0 +1,37 @@
+{
+    "logger": {
+      "name": "Logs #1",
+      "level": "debug"
+    },
+    "udp": {
+      "enabled": true,
+      "ip": "0.0.0.0",
+      "port": 12345
+    },
+    "http": {
+      "enabled": true,
+      "ip": "0.0.0.0",
+      "port": 12345
+    },
+    "queues": [
+      {
+        "type": "redis",
+        "config": {
+          "mode": "channel",
+          "channelName" : "ebot-logs",
+          "connection": {
+            "url": "redis://redis:6379"
+          }
+        }
+      }
+    ],
+    "plugins": [
+      {
+        "path": "src/logs-receiver/plugins/logger.ts",
+        "config": {
+          "path": "logs",
+          "split": true
+        }
+      }
+    ]
+  }
