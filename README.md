@@ -2,7 +2,7 @@
 
 ## Contexte
 
-Dans le cadre d'une compétition de jeux vidéo multigaming en physique, l'UTTArena, le déploiement et l'administration de serveurs et de matchs Counter Strike 2 est nécessaire.
+Dans le cadre d'une compétition de jeux vidéo multigaming en physique, l'UTT Arena, le déploiement et l'administration de serveurs et de matchs Counter Strike 2 est nécessaire.
 
 ## Fonctionnement
 
@@ -76,8 +76,7 @@ Pour installer une Wings, se fier à la documentation [disponible ici](./wings/)
 
 ## Utilisation
 
-Vous pouvez acceder aux différents services via l'addresse IP local du VLAN PROD via :
+Vous pouvez accéder aux différents services via l'adresse IP locale du VLAN PROD comme suit :
 - Pterodactyl : http://xxx.xxx.xxx.xxx:8000
 - Ebot :  http://xxx.xxx.xxx.xxx
 - Ebot admin : http://xxx.xxx.xxx.xxx/admin.php
-
